@@ -17,3 +17,22 @@ npm install next-themes
 ----------------- INSTALL TANSTACK QUERY-------------------
 
 npm i @tanstack/react-query
+
+
+----------------- INSTALL PRISMA-------------------
+npm install prisma @prisma/client @prisma/adapter-pg 
+
+
+----------------- PRISMA INIT AND GENERATE-------------------
+
+npx prisma init
+
+npx prisma generate -- do it whenever you modify the schema.prisma file
+
+npx prisma migrate dev -- name <migration_name> -- do it whenever you modify the schema.prisma file and you want to update the database
+
+npx prisma db push -- do it whenever you modify the schema.prisma file and you want to update the database
+
+npx prisma studio -- to open the database in a new tab
+
+ ------------------ 
