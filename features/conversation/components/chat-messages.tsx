@@ -4,7 +4,7 @@ import { isTextUIPart, type UIMessage } from "ai";
 import type { ChatStatus } from "ai";
 import type { VideoResult } from "@/features/ai/tools/youtube";
 import type { WebSearchResult } from "@/features/ai/tools/web-search";
-import { Loader2 } from "lucide-react";
+import { GitBranchIcon, Loader2 } from "lucide-react";
 
 import {
     Conversation,
@@ -12,6 +12,8 @@ import {
 } from "@/components/ai-elements/conversation";
 import {
     Message,
+    MessageActions,
+    MessageAction,
     MessageContent,
     MessageResponse,
 } from "@/components/ai-elements/message";
@@ -30,13 +32,14 @@ function getMessageText(message: UIMessage) {
 type ChatMessagesProps = {
     messages: UIMessage[];
     status: ChatStatus;
+    onBranch?: (messageId: string) => void;
 };
 
 /**
  * Renders the conversation message list.
  * Handles text parts, tool-call "Searching…" states, and tool-result YouTube cards.
  */
-export function ChatMessages({ messages, status }: ChatMessagesProps) {
+export function ChatMessages({ messages, status, onBranch }: ChatMessagesProps) {
     const lastMessage = messages.at(-1);
 
     // Show loader when: waiting for first token OR streaming but assistant message
@@ -133,6 +136,19 @@ export function ChatMessages({ messages, status }: ChatMessagesProps) {
 
                             return null;
                         })}
+
+                        {onBranch ? (
+                            <MessageActions
+                                className={message.role === "user" ? "justify-end" : "justify-start"}
+                            >
+                                <MessageAction
+                                    label="Branch from here"
+                                    onClick={() => onBranch(message.id)}
+                                >
+                                    <GitBranchIcon className="size-3.5" />
+                                </MessageAction>
+                            </MessageActions>
+                        ) : null}
                     </Message>
                 ))}
 

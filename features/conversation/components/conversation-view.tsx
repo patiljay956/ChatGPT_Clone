@@ -6,12 +6,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { useChat } from "@ai-sdk/react";
 import React, { useEffect, useMemo, useRef } from "react";
-import { useConversations } from "../hooks/use-conversation";
+import { useConversations, useCreateBranch } from "../hooks/use-conversation";
 import { queryKeys } from "../utils/query-keys";
 import { toast } from "sonner";
 import { ChatEmpty } from "./chat-empty";
 import { ChatMessages } from "./chat-messages";
 import { ChatComposer } from "./chat-composer";
+import { BranchSwitcher } from "./branch-switcher";
 import { ChevronDown, Share2, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -32,6 +33,7 @@ export const ConversationView = ({ conversationId, initialMessages, initialInput
     const hasSentInitial = useRef(false);
     const { data: conversations } = useConversations();
     const [webSearchEnabled, setWebSearchEnabled] = React.useState(initialWebSearchEnabled ?? false);
+    const createBranch = useCreateBranch();
 
     const transport = useMemo(
         () =>
@@ -89,6 +91,7 @@ export const ConversationView = ({ conversationId, initialMessages, initialInput
                         <span>ChatGPT</span>
                         <ChevronDown className="size-4 text-muted-foreground" />
                     </Button>
+                    <BranchSwitcher conversationId={conversationId} />
                 </div>
                 <div className="flex items-center gap-1">
                     <Button variant="ghost" size="sm" className="gap-1.5 rounded-full px-3 text-sm">
@@ -104,7 +107,13 @@ export const ConversationView = ({ conversationId, initialMessages, initialInput
             {messages.length === 0 ? (
                 <ChatEmpty />
             ) : (
-                <ChatMessages messages={messages} status={status} />
+                <ChatMessages
+                    messages={messages}
+                    status={status}
+                    onBranch={(messageId) =>
+                        createBranch.mutate({ conversationId, messageId })
+                    }
+                />
             )}
 
             <ChatComposer
