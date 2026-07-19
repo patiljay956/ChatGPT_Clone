@@ -31,11 +31,25 @@ model Conversation {
   updatedAt     DateTime @updatedAt
   lastMessageAt DateTime @default(now())
 
+  // Branching: `rootConversationId` points to the original conversation a branch
+  // tree started from (null when this conversation IS the root). `parentConversationId`
+  // + `branchFromMessageId` record the exact message this branch split off from.
+  rootConversationId   String?
+  parentConversationId String?
+  branchFromMessageId  String?
+
+  root     Conversation?  @relation("ConversationRoot", fields: [rootConversationId], references: [id], onDelete: Cascade)
+  branches Conversation[] @relation("ConversationRoot")
+
+  parent   Conversation?  @relation("ConversationParent", fields: [parentConversationId], references: [id], onDelete: SetNull)
+  children Conversation[] @relation("ConversationParent")
+
   messages Message[]
   user     user      @relation(fields: [userId], references: [id])
 
   @@index([userId, lastMessageAt(sort: Desc)])
   @@index([userId, isPinned, lastMessageAt(sort: Desc)])
+  @@index([rootConversationId])
 }
 
 enum MessageRole {
