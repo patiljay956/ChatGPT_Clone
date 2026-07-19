@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import {
+    createBranch,
     createConversation,
     deleteConversation,
+    listBranches,
     listConversations,
     updateConversation,
 } from "@/features/conversation/actions/conversation-actions";
@@ -60,6 +62,32 @@ export function useUpdateConversation() {
         },
         onError: (error: Error) => {
             toast.error(error.message || "Could not update chat");
+        },
+    });
+}
+
+export function useBranches(conversationId: string) {
+    return useQuery({
+        queryKey: queryKeys.conversations.branches(conversationId),
+        queryFn: () => listBranches(conversationId),
+    });
+}
+
+export function useCreateBranch() {
+    const queryClient = useQueryClient();
+    const router = useRouter();
+
+    return useMutation({
+        mutationFn: ({ conversationId, messageId }: { conversationId: string; messageId: string }) =>
+            createBranch(conversationId, messageId),
+        onSuccess: (branch) => {
+            void queryClient.invalidateQueries({
+                queryKey: queryKeys.conversations.all,
+            });
+            router.push(`/c/${branch.id}`);
+        },
+        onError: (error: Error) => {
+            toast.error(error.message || "Could not create branch");
         },
     });
 }
