@@ -33,7 +33,7 @@ Toggle "Web search" in the composer (off by default) to let the model call `sear
 
 ## Demo Video
 
-https://github.com/user-attachments/assets/2d402d6e-84fd-4a45-90b9-6bc079dd14f1
+https://github.com/user-attachments/assets/d945ab9d-bd9c-4ea7-b59b-6fc677d322e4
 
 ## Architecture notes
 
@@ -58,5 +58,4 @@ CLERK_SECRET_KEY=
 YT_API_KEY=               # YouTube Data API v3 key
 Tavily_API_KEY=           # Tavily Search API key
 ```
-
 Open [http://localhost:3000](http://localhost:3000).
