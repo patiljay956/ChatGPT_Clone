@@ -14,24 +14,28 @@ A ChatGPT-style chat app built on Next.js, with streaming AI responses, tool cal
 ## Features
 
 ### Streaming chat
+
 Real-time token streaming via the AI SDK, with distinct loading states — "Thinking…", "Searching YouTube…", "Searching the web…" — instead of a single opaque spinner, so the user can see what the model is doing at each step.
 
 ![Chat streaming](docs/screenshots/chat-streaming.png)
 
 ### YouTube search tool
+
 The model decides on its own when to call `searchYouTube` (`features/ai/tools/youtube.ts`) — e.g. when asked to find or recommend videos. Results render as clickable video cards with thumbnail, title, and channel.
 
 ![YouTube tool results](docs/screenshots/youtube-tool.png)
 
 ### Web search tool
+
 Toggle "Web search" in the composer (off by default) to let the model call `searchWeb` (`features/ai/tools/web-search.ts`, backed by Tavily) for current or real-world information. Sources render as a list of cards with domain, title, and snippet; the model cites them in its answer.
 
 ![Web search toggle and results](docs/screenshots/web-search.png)
 
-### Conversation branching
-Hover any message and click the branch icon to fork the conversation from that exact point — the new branch keeps full history up to the branch point but continues independently. Switch between branches from the header dropdown; rename/delete/pin work the same as any other chat via the sidebar.
+## Demo Video
 
-![Branch switcher](docs/screenshots/branching.png)
+<video src="docs/demo_video.mp4" controls="controls" style="max-width: 100%;">
+  Your browser does not support the video tag.
+</video>
 
 ## Architecture notes
 

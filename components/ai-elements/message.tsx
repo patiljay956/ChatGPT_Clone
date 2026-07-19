@@ -47,6 +47,9 @@ export const Message = ({ className, from, ...props }: MessageProps) => (
     />
 );
 
+/** Props for the message bubble content area. */
+export type MessageContentProps = HTMLAttributes<HTMLDivElement>;
+
 /** Styled bubble area containing the message body. */
 export const MessageContent = ({
     children,
