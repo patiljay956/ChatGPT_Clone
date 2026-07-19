@@ -35,4 +35,5 @@ npx prisma db push -- do it whenever you modify the schema.prisma file and you w
 
 npx prisma studio -- to open the database in a new tab
 
+npx prisma migrate deploy -- production 
  ------------------ 
