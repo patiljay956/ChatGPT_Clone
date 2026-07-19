@@ -47,7 +47,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ClerkProvider>
+        <ClerkProvider afterSignOutUrl="/sign-in">
           <QueryProvider>
             <ThemeProvider
               attribute="class"
