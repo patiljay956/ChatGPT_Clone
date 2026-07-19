@@ -20,24 +20,28 @@ type ConversationViewProps = {
     initialMessages: UIMessage[];
     /** When set, auto-sends this text as the first message on mount. */
     initialInput?: string;
+    /** Whether web search should be enabled for the auto-sent first message. */
+    initialWebSearchEnabled?: boolean;
 };
 
 /**
  * Main chat view — header, message list (or empty state), and composer with streaming.
  */
-export const ConversationView = ({ conversationId, initialMessages, initialInput }: ConversationViewProps) => {
+export const ConversationView = ({ conversationId, initialMessages, initialInput, initialWebSearchEnabled }: ConversationViewProps) => {
     const queryClient = useQueryClient();
     const hasSentInitial = useRef(false);
     const { data: conversations } = useConversations();
+    const [webSearchEnabled, setWebSearchEnabled] = React.useState(initialWebSearchEnabled ?? false);
 
     const transport = useMemo(
         () =>
             new DefaultChatTransport({
                 api: "/api/chat",
-                prepareSendMessagesRequest: ({ id, messages }) => ({
+                prepareSendMessagesRequest: ({ id, messages, body }) => ({
                     body: {
                         id,
                         message: messages.at(-1),
+                        webSearchEnabled: (body as { webSearchEnabled?: boolean } | undefined)?.webSearchEnabled,
                     },
                 }),
             }),
@@ -67,7 +71,7 @@ export const ConversationView = ({ conversationId, initialMessages, initialInput
             messages.length === 0
         ) {
             hasSentInitial.current = true;
-            void sendMessage({ text: initialInput });
+            void sendMessage({ text: initialInput }, { body: { webSearchEnabled } });
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status]);
@@ -105,10 +109,12 @@ export const ConversationView = ({ conversationId, initialMessages, initialInput
 
             <ChatComposer
                 onSend={(text) => {
-                    void sendMessage({ text });
+                    void sendMessage({ text }, { body: { webSearchEnabled } });
                 }}
                 isSending={status !== "ready"}
                 autoFocus
+                webSearchEnabled={webSearchEnabled}
+                onWebSearchToggle={setWebSearchEnabled}
             />
         </div>
     );

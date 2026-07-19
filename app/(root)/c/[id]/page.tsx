@@ -6,7 +6,7 @@ import React from 'react'
 
 type ConversationPageProps = {
     params: Promise<{ id: string }>;
-    searchParams: Promise<{ q?: string }>;
+    searchParams: Promise<{ q?: string; web?: string }>;
 };
 
 /**
@@ -15,7 +15,7 @@ type ConversationPageProps = {
  */
 const page = async ({ params, searchParams }: ConversationPageProps) => {
     const { id } = await params;
-    const { q } = await searchParams;
+    const { q, web } = await searchParams;
 
     try {
         await getConversation(id)
@@ -31,6 +31,7 @@ const page = async ({ params, searchParams }: ConversationPageProps) => {
             conversationId={id}
             initialMessages={initialMessages}
             initialInput={q}
+            initialWebSearchEnabled={web === "1"}
         />
     )
 }

@@ -19,12 +19,15 @@ import { Button } from "@/components/ui/button";
 export function NewChatView() {
     const router = useRouter();
     const [isSending, setIsSending] = useState(false);
+    const [webSearchEnabled, setWebSearchEnabled] = useState(false);
 
     async function handleSend(text: string) {
         setIsSending(true);
         try {
             const conversation = await createConversation();
-            router.push(`/c/${conversation.id}?q=${encodeURIComponent(text)}`);
+            const params = new URLSearchParams({ q: text });
+            if (webSearchEnabled) params.set("web", "1");
+            router.push(`/c/${conversation.id}?${params.toString()}`);
         } finally {
             setIsSending(false);
         }
@@ -49,6 +52,8 @@ export function NewChatView() {
                 onSend={handleSend}
                 isSending={isSending}
                 autoFocus
+                webSearchEnabled={webSearchEnabled}
+                onWebSearchToggle={setWebSearchEnabled}
             />
         </div>
     );

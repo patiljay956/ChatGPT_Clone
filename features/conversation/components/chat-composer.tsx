@@ -1,14 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { ArrowUpIcon } from "lucide-react";
+import { ArrowUpIcon, Globe } from "lucide-react";
 
-import {
-    InputGroup,
-    InputGroupAddon,
-    InputGroupButton,
-    InputGroupTextarea,
-} from "@/components/ui/input-group";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +14,8 @@ type ChatComposerProps = {
     placeholder?: string;
     className?: string;
     autoFocus?: boolean;
+    webSearchEnabled?: boolean;
+    onWebSearchToggle?: (enabled: boolean) => void;
 };
 
 /**
@@ -29,6 +27,8 @@ export function ChatComposer({
     placeholder = "Message ChaiGPT…",
     className,
     autoFocus = false,
+    webSearchEnabled = false,
+    onWebSearchToggle,
 }: ChatComposerProps) {
     const [value, setValue] = React.useState("");
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
@@ -65,8 +65,25 @@ export function ChatComposer({
             onSubmit={(event) => void handleSubmit(event)}
             className={cn("mx-auto w-full max-w-3xl px-4 pb-4 md:px-6", className)}
         >
-            <InputGroup className="h-auto min-h-14 rounded-3xl border-border/80 bg-background shadow-sm dark:bg-input/40">
-                <InputGroupTextarea
+            <div className="flex h-14 items-center gap-2 rounded-full border border-border/80 bg-background px-2 pl-4 shadow-sm dark:bg-input/40">
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onWebSearchToggle?.(!webSearchEnabled)}
+                    className={cn(
+                        "h-8 shrink-0 gap-1.5 rounded-full border px-3 text-xs",
+                        webSearchEnabled
+                            ? "border-primary/30 bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary"
+                            : "border-border/60 text-muted-foreground"
+                    )}
+                    aria-pressed={webSearchEnabled}
+                    aria-label="Toggle web search"
+                >
+                    <Globe className="size-3.5" />
+                    Web search
+                </Button>
+                <Textarea
                     ref={textareaRef}
                     value={value}
                     onChange={(event) => setValue(event.target.value)}
@@ -74,21 +91,19 @@ export function ChatComposer({
                     placeholder={placeholder}
                     disabled={isSending}
                     rows={1}
-                    className="max-h-48 min-h-12 py-3.5 pl-4 text-[15px] leading-relaxed"
+                    className="max-h-48 min-h-0 flex-1 resize-none border-0 bg-transparent px-0 py-0 text-[15px] leading-relaxed shadow-none focus-visible:ring-0 dark:bg-transparent"
                 />
-                <InputGroupAddon align="inline-end" className="pr-2 pb-2 self-end">
-                    <InputGroupButton
-                        type="submit"
-                        size="icon-sm"
-                        variant="default"
-                        disabled={!canSend}
-                        className="size-9 rounded-full"
-                        aria-label="Send message"
-                    >
-                        {isSending ? <Spinner /> : <ArrowUpIcon />}
-                    </InputGroupButton>
-                </InputGroupAddon>
-            </InputGroup>
+                <Button
+                    type="submit"
+                    size="icon"
+                    variant="default"
+                    disabled={!canSend}
+                    className="size-9 shrink-0 rounded-full"
+                    aria-label="Send message"
+                >
+                    {isSending ? <Spinner /> : <ArrowUpIcon />}
+                </Button>
+            </div>
             <p className="mt-2 text-center text-xs text-muted-foreground">
                 ChaiGPT can make mistakes. Check important info.
             </p>
