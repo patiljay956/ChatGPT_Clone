@@ -31,8 +31,12 @@ type ChatMessagesProps = {
  * Renders the conversation message list with markdown responses and a loading indicator.
  */
 export function ChatMessages({ messages, status }: ChatMessagesProps) {
+    const lastMessage = messages.at(-1);
     const isWaiting =
-        status === "submitted" && messages.at(-1)?.role === "user";
+        // API request in flight, no response yet
+        (status === "submitted" && lastMessage?.role === "user") ||
+        // Response started streaming but first token hasn't rendered yet
+        (status === "streaming" && lastMessage?.role === "assistant" && getMessageText(lastMessage) === "");
 
     return (
         <Conversation>

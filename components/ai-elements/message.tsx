@@ -47,9 +47,6 @@ export const Message = ({ className, from, ...props }: MessageProps) => (
     />
 );
 
-/** Props for the message bubble/content wrapper. */
-export type MessageContentProps = HTMLAttributes<HTMLDivElement>;
-
 /** Styled bubble area containing the message body. */
 export const MessageContent = ({
     children,
@@ -58,9 +55,9 @@ export const MessageContent = ({
 }: MessageContentProps) => (
     <div
         className={cn(
-            "is-user:dark flex w-fit min-w-0 max-w-full flex-col gap-2 overflow-hidden text-sm",
-            "group-[.is-user]:ml-auto group-[.is-user]:rounded-lg group-[.is-user]:bg-secondary group-[.is-user]:px-4 group-[.is-user]:py-3 group-[.is-user]:text-foreground",
-            "group-[.is-assistant]:text-foreground",
+            "flex w-fit min-w-0 max-w-[70%] flex-col gap-2 overflow-hidden text-[15px] leading-relaxed",
+            "group-[.is-user]:ml-auto group-[.is-user]:rounded-[24px] group-[.is-user]:bg-[#f4f4f4] group-[.is-user]:dark:bg-[#2f2f2f] group-[.is-user]:px-5 group-[.is-user]:py-3 group-[.is-user]:text-foreground",
+            "group-[.is-assistant]:text-foreground group-[.is-assistant]:max-w-full",
             className
         )}
         {...props}
