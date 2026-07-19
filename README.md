@@ -33,9 +33,7 @@ Toggle "Web search" in the composer (off by default) to let the model call `sear
 
 ## Demo Video
 
-<video src="docs/demo_video.mp4" controls="controls" style="max-width: 100%;">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/2d402d6e-84fd-4a45-90b9-6bc079dd14f1
 
 ## Architecture notes
 
